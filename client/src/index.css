@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  /* ── Background Colors ── */
+  --color-app: var(--color-bg-app);
+  --color-sidebar: var(--color-bg-sidebar);
+  --color-main: var(--color-bg-main);
+  --color-card: var(--color-bg-card);
+  --color-card-hover: var(--color-bg-card-hover);
+  --color-input: var(--color-bg-input);
+  --color-input-focus: var(--color-bg-input-focus);
+  --color-message-user: var(--color-bg-message-user);
+  --color-message-assistant: var(--color-bg-message-assistant);
+  --color-new-chat: var(--color-bg-new-chat);
+  --color-new-chat-hover: var(--color-bg-new-chat-hover);
+  --color-sidebar-item: var(--color-bg-sidebar-item);
+  --color-sidebar-item-active: var(--color-bg-sidebar-item-active);
+  --color-sidebar-item-hover: var(--color-bg-sidebar-item-hover);
+  --color-mic: var(--color-bg-mic);
+  --color-mic-hover: var(--color-bg-mic-hover);
+  --color-avatar: var(--color-bg-avatar);
+
+  /* ── Text Colors ── */
+  --color-primary: var(--color-text-primary);
+  --color-secondary: var(--color-text-secondary);
+  --color-tertiary: var(--color-text-tertiary);
+  --color-muted: var(--color-text-muted);
+  --color-accent: var(--color-text-accent);
+  --color-brand: var(--color-text-brand);
+  --color-sidebar-label: var(--color-text-sidebar-label);
+  --color-placeholder: var(--color-text-placeholder);
+  --color-footer: var(--color-text-footer);
+
+  /* ── Border Colors ── */
+  --color-border-card: var(--color-border-card);
+  --color-border-card-hover: var(--color-border-card-hover);
+  --color-border-input: var(--color-border-input);
+  --color-border-input-focus: var(--color-border-input-focus);
+  --color-border-sidebar: var(--color-border-sidebar);
+  --color-border-divider: var(--color-border-divider);
+  --color-border-orb: var(--color-border-orb);
+
+  /* ── Accent & Effect Colors ── */
+  --color-accent-primary: var(--color-accent-primary);
+  --color-accent-secondary: var(--color-accent-secondary);
+  --color-accent-gradient: var(--color-accent-gradient);
+  --color-shadow-mic: var(--color-shadow-mic);
+  --color-shadow-card: var(--color-shadow-card);
+  --color-shadow-glow: var(--color-shadow-glow);
+  --color-focus-glow: var(--color-focus-glow);
+}
+
+:root {
+  /* ── Background Colors ── */
+  --color-bg-app: #0a0a14;
+  --color-bg-sidebar: #0d0d1a;
+  --color-bg-main: #111122;
+  --color-bg-card: rgba(255, 255, 255, 0.04);
+  --color-bg-card-hover: rgba(255, 255, 255, 0.07);
+  --color-bg-input: rgba(67, 49, 49, 0.237);
+  --color-bg-input-focus: rgba(255, 255, 255, 0.08);
+  --color-bg-message-user: #454853;
+  --color-bg-message-assistant: #1235c3;
+  --color-bg-new-chat: #1c3497;
+  --color-bg-new-chat-hover: #14266d;
+  --color-bg-sidebar-item: transparent;
+  --color-bg-sidebar-item-active: rgba(255, 255, 255, 0.06);
+  --color-bg-sidebar-item-hover: rgba(255, 255, 255, 0.04);
+  --color-bg-mic: #152a9b;
+  --color-bg-mic-hover: #1c3497;
+  --color-bg-avatar: #3b82f6;
+  --color-bg-orb: radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, rgba(79, 70, 229, 0.08) 50%, transparent 70%);
+  --color-bg-orb-inner: radial-gradient(circle, rgba(79, 70, 229, 0.20) 0%, rgba(79, 70, 229, 0.05) 70%);
+  --color-bg-main-gradient: radial-gradient(ellipse at 50% 35%, rgba(79, 70, 229, 0.06) 0%, transparent 60%);
+
+  /* ── Text Colors ── */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.65);
+  --color-text-tertiary: rgba(255, 255, 255, 0.40);
+  --color-text-muted: rgba(255, 255, 255, 0.25);
+  --color-text-accent: #818cf8;
+  --color-text-brand: #a78bfa;
+  --color-text-sidebar-label: rgba(255, 255, 255, 0.35);
+  --color-text-placeholder: rgba(255, 255, 255, 0.30);
+  --color-text-footer: rgba(255, 255, 255, 0.20);
+
+  /* ── Border Colors ── */
+  --color-border-card: rgba(255, 255, 255, 0.08);
+  --color-border-card-hover: rgba(255, 255, 255, 0.15);
+  --color-border-input: rgba(255, 255, 255, 0.08);
+  --color-border-input-focus: rgba(129, 140, 248, 0.4);
+  --color-border-sidebar: rgba(255, 255, 255, 0.06);
+  --color-border-divider: rgba(255, 255, 255, 0.06);
+  --color-border-orb: rgba(129, 140, 248, 0.15);
+
+  /* ── Accent & Effect Colors ── */
+  --color-accent-primary: #818cf8;
+  --color-accent-secondary: #a78bfa;
+  --color-accent-gradient: linear-gradient(135deg, #1527c4, #dddef5);
+  --color-shadow-mic: rgba(59, 130, 246, 0.35);
+  --color-shadow-card: rgba(0, 0, 0, 0.3);
+  --color-shadow-glow: rgba(79, 70, 229, 0.15);
+  --color-focus-glow: rgba(129, 140, 248, 0.08);
+}
+
+
+/* ================================================================
+   MINIMAL GLOBAL RESETS (Tailwind handles the rest)
+   ================================================================ */
+
+
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--color-bg-app);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+
+
+/* ================================================================
+   ANIMATIONS — KEYFRAMES
+   ================================================================ */
+
+@keyframes orb-pulse {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+@keyframes sparkle-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ================================================================
+   ANIMATIONS — UTILITY CLASSES
+   ================================================================ */
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease forwards;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fade-in-up 0.6s ease 0.1s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fade-in-up 0.6s ease 0.2s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-3 {
+  animation: fade-in-up 0.6s ease 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-fade-in-up-delay-4 {
+  animation: fade-in-up 0.6s ease 0.4s forwards;
+  opacity: 0;
+}
+
+.animate-orb-pulse {
+  animation: orb-pulse 4s ease-in-out infinite;
+}
+
+.animate-sparkle-rotate {
+  animation: sparkle-rotate 8s linear infinite;
+}
+
+
+/* ================================================================
+   SPECIAL STYLES (things Tailwind can't easily do)
+   ================================================================ */
+
+/* Gradient text for the "Aura" accent word */
+.text-gradient-accent {
+  background: var(--color-accent-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
