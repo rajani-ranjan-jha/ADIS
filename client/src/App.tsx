@@ -6,9 +6,11 @@ import HeroSection from "./components/HeroSection";
 import MessageContainer from "./components/MessageContainer";
 import VoiceAssistantUI from "./components/AssistantUI";
 import VoiceAssistantNewUI from "./components/AssistantNewUI";
+import { useState } from "react";
 
 const Home = () => {
   const token = localStorage.getItem("auth_token");
+  const [opened, setOpened] = useState(false);
 
   if (!token) {
     console.log('not logged in')
@@ -18,12 +20,13 @@ const Home = () => {
     console.log('logged in')
   }
 
+  // TODO: implement via redux(component handling, user info, etc)
   return (
-    <div className="min-w-screen min-h-screen flex justify-between overflow-hidden">
+    <div className="min-w-screen min-h-screen flex justify-between overflow-hidden relative">
       <Sidebar />
-      {/* <VoiceAssistantNewUI/> */}
-      {/* <VoiceAssistantUI/> */}
-      <HeroSection />
+      {opened ? <VoiceAssistantNewUI setOpened={setOpened}/> : <HeroSection setOpened={setOpened} />}
+      {/* <VoiceAssistantNewUI setOpened={setOpened}/> */}
+      {/* <HeroSection /> */}
       {/* <MessageContainer/> */}
     </div>
   );

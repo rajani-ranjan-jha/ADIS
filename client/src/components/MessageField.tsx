@@ -21,9 +21,8 @@ const MessageField = ({ message, sender }: MessageFieldProps) => {
         </div>
         <div
           className={
-            hover
-              ? "absolute -bottom-8 left-0 w-full flex justify-start items-center"
-              : "hidden"
+            "z-100 absolute -bottom-8 left-0 w-full flex justify-start items-center"
+              
           }
         >
           <button className="p-1 hover:bg-white/20 hover:scale-105 w-8 h-8 flex items-center justify-center rounded-full shrink-0 transition-colors duration-200 cursor-pointer">

@@ -59,16 +59,16 @@ const ParticleSphere = ({ amplitudeRef }) => {
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
-          count={COUNT}
+          count={1500}
           array={pos}
-          itemSize={3}
+          itemSize={3}//dimension
         />
       </bufferGeometry>
       <pointsMaterial
-        size={0.043}
-        color="#5b9eff"
+        size={0.065}
+        color="blue"
         transparent
-        opacity={0.78}
+        opacity={0.99}
         sizeAttenuation
         depthWrite={false}
       />
@@ -76,36 +76,26 @@ const ParticleSphere = ({ amplitudeRef }) => {
   );
 };
 
-// ─── corner bracket helper ────────────────────────────────────────────────────
-const Corner = ({ t, b, l, r, color }) => (
-  <div style={{
-    position: 'absolute',
-    width: 26, height: 26,
-    zIndex: 20,
-    ...(t !== undefined ? { top: t } : {}),
-    ...(b !== undefined ? { bottom: b } : {}),
-    ...(l !== undefined ? { left: l } : {}),
-    ...(r !== undefined ? { right: r } : {}),
-    borderTop:    t !== undefined ? `3.5px solid ${color}` : 'none',
-    borderBottom: b !== undefined ? `3.5px solid ${color}` : 'none',
-    borderLeft:   l !== undefined ? `3.5px solid ${color}` : 'none',
-    borderRight:  r !== undefined ? `3.5px solid ${color}` : 'none',
-    transition: 'border-color 0.4s',
-  }} />
-);
 
 // ─── main component ────────────────────────────────────────────────────────────
-export default function VoiceAssistantNewUI() {
-  const [listening,   setListening]   = useState(false);
-  const [showCC,      setShowCC]      = useState(true);
-  const [transcript,  setTranscript]  = useState('');
-  const [interim,     setInterim]     = useState('');
+export default function VoiceAssistantNewUI({setOpened}: {setOpened: (opened: boolean) => void}) {
+  const [listening, setListening]   = useState(false);
+  const [showCC, setShowCC]      = useState(true);
+  const [transcript, setTranscript]  = useState('');
+  const [interim, setInterim]     = useState('');
+  // const [opened, setOpened]      = useState(status);
 
   const amplitudeRef = useRef(0);
   const analyserRef  = useRef(null);
   const dataRef      = useRef(null);
   const streamRef    = useRef(null);
   const recRef       = useRef(null);
+
+  // useEffect(() => {
+  // console.log("interim: ", interim)
+  // console.log("transcript: ",transcript)
+
+  // }, [interim, transcript])
 
   // ── Always-running RAF loop: reads analyser or slowly decays amplitude ──────
   useEffect(() => {
@@ -195,58 +185,26 @@ export default function VoiceAssistantNewUI() {
   // ── derived UI values ───────────────────────────────────────────────────────
   const accentBlue  = `rgba(96, 165, 250, 0.85)`;
   const dimBlue     = `rgba(30, 58, 138, 0.55)`;
-  const cornerColor = listening ? accentBlue : dimBlue;
   const displayText = interim || transcript || (listening ? 'Listening...' : 'Say something...');
 
   return (
     <>
-      {/* Pulse ring keyframe */}
-      <style>{`
-        @keyframes pulse-ring {
-          0%   { box-shadow: 0 0 0 0   rgba(96,165,250,0.45), 0 0 24px rgba(59,130,246,0.35); }
-          65%  { box-shadow: 0 0 0 14px rgba(96,165,250,0),   0 0 24px rgba(59,130,246,0.35); }
-          100% { box-shadow: 0 0 0 0   rgba(96,165,250,0),   0 0 24px rgba(59,130,246,0.35); }
-        }
-        @keyframes blink-dot {
-          0%,100% { opacity:1; } 50% { opacity:0.3; }
-        }
-      `}</style>
-
-      <div style={{
-        position: 'relative',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 18,
-        width: '100%',
-        minHeight: '100vh',
-        background: '#06091a',
-        fontFamily: '"Segoe UI", system-ui, sans-serif',
-        overflow: 'hidden',
-      }}>
-
-        {/* Soft radial background glow */}
-        <div style={{
-          position: 'absolute', inset: 0, pointerEvents: 'none',
-          background: 'radial-gradient(ellipse 55% 45% at 50% 48%, rgba(20,42,110,0.28) 0%, transparent 72%)',
-        }} />
+      <div className={`
+        animate-fade-in-up-delay-1 border-0 border-red-500 flex flex-col items-center justify-center gap-4 w-full bg-[#000017] font-sans overflow-hidden transition-all duration-500
+      `}>
 
         {/* ── Top-right Caption Toggle ── */}
         <button
           onClick={() => setShowCC(v => !v)}
           title={showCC ? 'Hide captions' : 'Show captions'}
+          className={`
+            absolute top-[22px] right-[22px] z-30 flex items-center gap-[6px]
+            px-3 py-[6px] rounded-lg text-xs tracking-[0.05em] cursor-pointer transition-all duration-[250ms]
+          `}
           style={{
-            position: 'absolute', top: 22, right: 22, zIndex: 30,
-            display: 'flex', alignItems: 'center', gap: 6,
-            padding: '6px 12px',
             background: showCC ? 'rgba(59,130,246,0.13)' : 'transparent',
             border: `1px solid ${showCC ? 'rgba(96,165,250,0.38)' : 'rgba(55,65,81,0.55)'}`,
-            borderRadius: 8,
             color: showCC ? '#93c5fd' : '#4b5563',
-            fontSize: 12, letterSpacing: '0.05em',
-            cursor: 'pointer',
-            transition: 'all 0.25s',
           }}
         >
           <MessageSquare size={14} strokeWidth={1.6} />
@@ -254,22 +212,9 @@ export default function VoiceAssistantNewUI() {
         </button>
 
         {/* ── 3D Canvas with styled frame ── */}
-        <div style={{
-          position: 'relative',
-          width: 300, height: 300,
-          zIndex: 10,
-          transition: 'box-shadow 0.5s',
-          boxShadow: listening
-            ? '0 0 70px rgba(59,130,246,0.18), inset 0 0 50px rgba(59,130,246,0.06)'
-            : '0 0 20px rgba(10,20,50,0.5)',
-        }}>
-
-          
-
-          
-
+        <div className="p-10 w-200 h-100 relative z-10 transition-shadow duration-500">
           <Canvas
-            camera={{ position: [0, 0, 5.8], fov: 45 }}
+            camera={{ position: [0, 0, 5.5], fov: 55 }}
             style={{ background: 'transparent' }}
           >
             <ParticleSphere amplitudeRef={amplitudeRef} />
@@ -277,84 +222,61 @@ export default function VoiceAssistantNewUI() {
         </div>
 
         {/* ── Live status / caption text ── */}
-        <div style={{
-          zIndex: 10,
-          minHeight: 30,
-          maxWidth: 480,
-          textAlign: 'center',
-          padding: '0 20px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 8,
-        }}>
+        <div className="z-10 min-h-[30px] max-w-[480px] text-center px-5 flex items-center justify-center gap-2">
           {listening && (
-            <span style={{
-              width: 7, height: 7, borderRadius: '50%',
-              background: '#60a5fa',
-              display: 'inline-block', flexShrink: 0,
-              animation: 'blink-dot 1s ease-in-out infinite',
-            }} />
+            <span
+              className="w-[7px] h-[7px] rounded-full bg-[#60a5fa] inline-block shrink-0"
+              style={{ animation: 'blink-dot 1s ease-in-out infinite' }}
+            />
           )}
           {showCC ? (
-            <p style={{
-              color: interim ? '#a5c8fd' : '#3a5a9e',
-              fontSize: 15, fontWeight: 400,
-              letterSpacing: '0.05em', margin: 0,
-              transition: 'color 0.25s',
-            }}>
+            <p
+              className="text-[15px] font-normal tracking-[0.05em] m-0 transition-colors duration-250"
+              style={{ color: interim ? '#a5c8fd' : '#3a5a9e' }}
+            >
               {displayText}
             </p>
           ) : (
-            <p style={{ color: '#252525', fontSize: 12, margin: 0 }}>
+            <p className="text-[#252525] text-xs m-0">
               Captions off
             </p>
           )}
         </div>
 
         {/* ── Action buttons ── */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 22,
-          zIndex: 10, marginBottom: 40,
-        }}>
+        <div className="flex items-center gap-5 z-10 mb-10">
 
           {/* Stop & clear button */}
           <button
             onClick={handleStop}
             aria-label="Stop and clear"
-            style={{
-              width: 54, height: 54, borderRadius: '50%',
-              background: '#0c111e',
-              border: '1px solid rgba(31,41,55,0.9)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = '#12192f'}
-            onMouseLeave={e => e.currentTarget.style.background = '#0c111e'}
+            className="
+              w-16 h-16 rounded-full bg-[#0c111e]
+              border border-[rgba(31,41,55,0.9)]
+              flex items-center justify-center cursor-pointer
+              transition-all duration-200 hover:bg-[#12192f]
+            "
           >
-            <X size={22} strokeWidth={1.5} style={{ color: '#4b5563' }} />
+            <X onClick={() => setOpened(false)} size={22} strokeWidth={1.5} className="text-[#4b5563]" />
           </button>
 
           {/* Mic toggle — pulses when listening */}
           <button
             onClick={handleMicToggle}
             aria-label={listening ? 'Stop listening' : 'Start listening'}
+            className="w-16 h-16 rounded-full flex items-center justify-center cursor-pointer"
             style={{
-              width: 64, height: 64, borderRadius: '50%',
               background: listening ? 'rgba(59,130,246,0.18)' : '#0c111e',
               border: listening
                 ? '2px solid rgba(96,165,250,0.6)'
                 : '1px solid rgba(31,41,55,0.9)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              cursor: 'pointer',
               transition: 'background 0.25s, border 0.25s',
               animation: listening ? 'pulse-ring 1.6s ease-out infinite' : 'none',
             }}
           >
             {listening
-              ? <MicOff size={26} strokeWidth={1.5} style={{ color: '#60a5fa' }} />
-              : <Mic    size={26} strokeWidth={1.5} style={{ color: '#4b5563' }} />
+              ? <MicOff size={22} strokeWidth={1.5} className="text-[#60a5fa]" />
+              : <Mic size={22} strokeWidth={1.5} className="text-[#4b5563]" />
             }
           </button>
         </div>

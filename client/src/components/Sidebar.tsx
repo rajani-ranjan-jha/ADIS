@@ -20,19 +20,16 @@ const UserName = import.meta.env.VITE_USER_NAME;
 const AssistantVersion = import.meta.env.VITE_ASSISTANT_VERSION;
 
 const recentChats: ChatItem[] = [
-  { id: "1", title: "Morning Routine" },
+  { id: "1", title: "Greeting..." },
   { id: "2", title: "Project Aura Planning" },
   { id: "3", title: "Voice Memo 3/17" },
   { id: "4", title: "Travel Itinerary" },
-  { id: "11", title: "Morning Routine" },
-  { id: "12", title: "Project Aura Planning" },
-  { id: "13", title: "Voice Memo 3/17" },
-  { id: "14", title: "Travel Itinerary" },
+
 ];
 
 const Sidebar = () => {
   const [activeChat, setActiveChat] = useState<string>("1");
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(localStorage.getItem("sidebar_open") === "true" ? true : false);
   const [isMoreOptionEnabled, setIsMoreOptionEnabled] =
     useState<boolean>(false);
   const [isHovered, setIsHovered] = useState<boolean>(false);
@@ -40,6 +37,9 @@ const Sidebar = () => {
   const childRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   
+  useEffect(() => {
+    localStorage.setItem("sidebar_open", isSidebarOpen.toString());
+  },[isSidebarOpen])
 
   useEffect(() => {
     const handleClickOutside = (event: any) => {
@@ -60,7 +60,7 @@ const Sidebar = () => {
     };
   }, [isMoreOptionEnabled]);
 
-  // TODO: small width
+  // INFO: small width
   if (!isSidebarOpen) {
     return (
       <aside className="min-w-8 max-h-screen flex flex-col px-2 py-5 relative z-100 border-r border-border-sidebar bg-sidebar">
@@ -117,7 +117,7 @@ const Sidebar = () => {
     );
   }
 
-  // full chat width
+  // INFO: full chat width
   return (
     <aside
       className="w-60 min-w-60 max-h-screen flex flex-col p-5 relative z-100"

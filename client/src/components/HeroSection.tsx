@@ -1,14 +1,14 @@
 import {
   Sparkles,
 } from "lucide-react";
-import Inputbar from "./InputField";
+import InputField from "./InputField";
 
 
 const AssistantName = import.meta.env.VITE_ASSISTANT_NAME;
 const UserName = import.meta.env.VITE_USER_NAME;
 
 
-const HeroSection = () => {
+const HeroSection = ({setOpened}: {setOpened: (opened: boolean) => void}) => {
   return (
     <main className="h-full flex-1 flex flex-col items-center justify-between overflow-hidden p-8 border-0">
       {/* Hero Section */}
@@ -56,7 +56,7 @@ const HeroSection = () => {
         </p>
       </section>
 
-      <Inputbar />
+      <InputField setOpened={setOpened} />
     </main>
   );
 };

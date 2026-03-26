@@ -1,7 +1,7 @@
 import { Mic, Paperclip, ArrowUp } from "lucide-react";
 import { useRef, useState, useCallback } from "react";
 
-const InputField = () => {
+const InputField = ({setOpened}: {setOpened: (opened: boolean) => void}) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [value, setValue] = useState("");
   const AssistantName = import.meta.env.VITE_ASSISTANT_NAME;
@@ -125,7 +125,7 @@ const InputField = () => {
               (e.currentTarget.style.backgroundColor = "var(--color-bg-mic)")
             }
           >
-            <Mic size={20} strokeWidth={2} />
+            <Mic onClick={() => setOpened(true)} size={20} strokeWidth={2} />
           </button>
         )}
       </div>
