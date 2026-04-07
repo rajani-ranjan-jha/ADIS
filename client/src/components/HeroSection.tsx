@@ -2,6 +2,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import InputField from "./InputField";
+import AudioLinesIcon from "./AudioLinesIcon";
 
 
 const AssistantName = import.meta.env.VITE_ASSISTANT_NAME;
@@ -28,11 +29,12 @@ const HeroSection = ({setOpened}: {setOpened: (opened: boolean) => void}) => {
               border: "1px solid var(--color-border-orb)",
             }}
           >
-            <Sparkles
+            {/* <Sparkles
               className="w-12 h-12 animate-sparkle-rotate"
               strokeWidth={1.5}
               style={{ color: "var(--color-accent-primary)" }}
-            />
+            /> */}
+            <AudioLinesIcon size={60} infinite={true}/>
           </div>
         </div>
 

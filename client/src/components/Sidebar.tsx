@@ -9,6 +9,7 @@ import {
   SidebarOpen,
 } from "lucide-react";
 import MoreOptions from "./MoreOptions";
+import AudioLinesIcon from "./AudioLinesIcon";
 
 interface ChatItem {
   id: string;
@@ -76,10 +77,11 @@ const Sidebar = () => {
             {isHovered ? (
               <SidebarOpen size={22} strokeWidth={1.5} />
             ) : (
-              <AudioLines
-                className="w-5 h-5"
-                style={{ color: "var(--color-text-primary)" }}
-              />
+              // <AudioLines
+              //   className="w-5 h-5"
+              //   style={{ color: "var(--color-text-primary)" }}
+              // />
+              <AudioLinesIcon size={22} infinite={true}/>
             )}
           </div>
         </div>
@@ -132,10 +134,11 @@ const Sidebar = () => {
           className="w-9 h-9 rounded-[10px] flex items-center justify-center shrink-0"
           style={{ background: "var(--color-accent-gradient)" }}
         >
-          <AudioLines
+          {/* <AudioLines
             className="w-5 h-5"
             style={{ color: "var(--color-text-primary)" }}
-          />
+          /> */}
+          <AudioLinesIcon size={22} infinite={true}/>
         </div>
         <div className="flex flex-col ">
           <span

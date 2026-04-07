@@ -211,7 +211,7 @@ export default function Auth() {
                 ></path>
               </svg>
             ) : isLogin ? (
-              "Sign in to Account"
+              "Submit"
             ) : (
               "Create Account"
             )}
