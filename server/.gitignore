@@ -1,0 +1,22 @@
+# environment variable
+.env
+
+# virtual environment
+.venv
+.adis
+
+# python cache
+__pycache__
+
+# node modules
+node_modules
+
+# build
+dist
+build
+
+# logs
+logs
+
+# egg-info
+*.egg-info

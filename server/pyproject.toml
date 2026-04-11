@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build_backend = "setuptools.build_meta"
+
+[project]
+name = "server"
+version = "0.1.0"
+description = "Voice assistant server"
+dependencies = []   # ← keep it empty, requirements.txt handles this
+
+[tool.setuptools.packages.find]
+where = ["."]
