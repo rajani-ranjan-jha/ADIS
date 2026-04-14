@@ -112,7 +112,7 @@ const Sidebar = () => {
               setIsMoreOptionEnabled((prev) => !prev);
             }}
           >
-            {UserName.charAt(0).toUpperCase()}
+            {UserName?.charAt(0)?.toUpperCase()}
           </button>
         </div>
       </aside>
