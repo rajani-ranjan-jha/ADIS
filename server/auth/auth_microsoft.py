@@ -1,7 +1,9 @@
 # auth_microsoft.py
+from models.User import UserModel
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import httpx
+import base64
 
 
 from auth.auth_utils import create_jwt
@@ -10,6 +12,7 @@ from db.connect import get_connection, now
 router = APIRouter()
 
 USER_INFO_URL = "https://graph.microsoft.com/v1.0/me"
+PHOTO_URL = "https://graph.microsoft.com/v1.0/me/photo/$value"
 
 class MicrosoftTokenRequest(BaseModel):
     access_token: str
@@ -24,6 +27,12 @@ async def microsoft_login(body: MicrosoftTokenRequest):
             USER_INFO_URL,
             headers={"Authorization": f"Bearer {access_token}"}
         )
+        
+        # ── Step C: Attempt to fetch the user's profile picture ──
+        photo_response = await client.get(
+            PHOTO_URL,
+            headers={"Authorization": f"Bearer {access_token}"}
+        )
 
     if profile_response.status_code != 200:
         raise HTTPException(status_code=400, detail="Failed to fetch user profile from Microsoft")
@@ -33,30 +42,34 @@ async def microsoft_login(body: MicrosoftTokenRequest):
     email     = profile.get("mail") or profile.get("userPrincipalName")
     full_name = profile.get("displayName", "")
     
-    print("success microsoft login ✅✅: ", profile, email, ms_id, full_name)
+    # Process profile picture if available
+    profile_pic = None
+    if photo_response.status_code == 200:
+        encoded_string = base64.b64encode(photo_response.content).decode("utf-8")
+        mime_type = photo_response.headers.get("Content-Type", "image/jpeg")
+        profile_pic = f"data:{mime_type};base64,{encoded_string}"
+    
+    # print("success microsoft login ✅✅: ", {full_name, email, profile_pic})
 
     if not email:
         raise HTTPException(status_code=400, detail="Could not retrieve email from Microsoft")
 
     # DB CONNECTION
-    # conn = get_connection()
-    # cursor = conn.cursor()
-
-    # cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
-    # existing_user = cursor.fetchone()
-
-    # if existing_user:
-    #     user_id = existing_user[0]
-    # else:
-    #     cursor.execute(
-    #         "INSERT INTO users (full_name, email, auth_provider, provider_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-    #         (full_name, email, "microsoft", ms_id, now(), now())
-    #     )
-    #     conn.commit()
-    #     user_id = cursor.lastrowid
-
-    # conn.close()
-
+    try:
+        existingUser = UserModel.find_one({"email":email})
+        if not existingUser:
+            UserModel.insert_one({
+                "name": full_name,
+                "email": email,
+                "profile_pic": profile_pic,
+                # "auth_provider": "microsoft",
+                # "provider_id": ms_id,
+                "created_at": now(),
+                "updated_at": now()
+            })
+    except Exception as e:
+        print("Error in microsoft login: ", e)
+    
     jwt_token = create_jwt(user_id=ms_id, email=email)
 
-    return {"token": jwt_token, "user": {"email": email, "full_name": full_name}}
+    return {"token": jwt_token, "user": {"email": email, "full_name": full_name, "profile_pic": profile_pic}}

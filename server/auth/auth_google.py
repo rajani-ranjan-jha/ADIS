@@ -1,4 +1,5 @@
 # auth_google.py
+from models.User import UserModel
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 import httpx
@@ -28,29 +29,26 @@ async def google_login(body: GoogleTokenRequest):
     google_id = user_info.get("sub")
     full_name = user_info.get("name", "")
 
-    print("success google login ✅✅: ", user_info, email, google_id, full_name)
+    # print("success google login ✅✅: ", full_name, email, google_id, profile_pic)
     
     if not email:
         raise HTTPException(status_code=400, detail="Could not retrieve email from Google")
         
     # DB CONNECTION
-    # conn = get_connection()
-    # cursor = conn.cursor()
-    
-    # cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
-    # existing_user = cursor.fetchone()
-    
-    # if existing_user:
-    #     user_id = existing_user[0]
-    # else:
-    #     cursor.execute(
-    #         "INSERT INTO users (full_name, email, auth_provider, provider_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-    #         (full_name, email, "google", google_id, now(), now())
-    #     )
-    #     conn.commit()
-    #     user_id = cursor.lastrowid
-        
-    # conn.close()
+    try:
+        existingUser = UserModel.find_one({"email":email})
+        if not existingUser:
+            UserModel.insert_one({
+                "name": full_name,
+                "email": email,
+                "profile_pic": profile_pic,
+                # "auth_provider": "google",
+                # "provider_id": google_id,
+                "created_at": now(),
+                "updated_at": now()
+            })
+    except Exception as e:
+        print("Error in google login: ", e)
     
     jwt_token = create_jwt(user_id=google_id, email=email)
     
