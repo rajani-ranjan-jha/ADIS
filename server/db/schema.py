@@ -1,4 +1,4 @@
-from others.config import MONGODB_URI
+from config.config import MONGODB_URI
 from pymongo import MongoClient
 
 # client = MongoClient("mongodb://localhost:27017/") #local db

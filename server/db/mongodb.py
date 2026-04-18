@@ -1,7 +1,7 @@
 import certifi
 from pymongo import MongoClient
 from pymongo.server_api import ServerApi
-from others.config import MONGODB_URI
+from config.config import MONGODB_URI
 
 # Replace the placeholder with your Atlas connection string
 uri = MONGODB_URI

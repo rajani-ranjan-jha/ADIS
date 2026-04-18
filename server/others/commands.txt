@@ -1,5 +1,0 @@
-- check the OS:
-if "true" == ',('; then uname -srvm; fi;true \) else ver
-
-- check battery percentage in windows
-powerShell -command "(Get-WmiObject Win32_Battery).EstimatedChargeRemaining"

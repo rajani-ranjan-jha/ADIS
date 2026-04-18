@@ -1,7 +1,7 @@
 # auth_utils.py
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
-from others.config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRE_MINUTES
+from config.config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRE_MINUTES
 
 
 def create_jwt(user_id: int, email: str) -> str:
