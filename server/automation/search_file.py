@@ -289,14 +289,5 @@ def search_folder_by_date_range(start_date: str, end_date: str, folder: str = No
     return _run_search(f'powershell -Command "{ps_cmd}"')
 
 
-# ──────────────────────────────────────────────
-#  QUICK TEST
-# ──────────────────────────────────────────────
-
-if __name__ == "__main__":
-    # Example: search for a file named "hosts" on the C: drive
-    # print("=== Searching for 'hosts' on C: ===")
-    # # for path in search_file_in_drive("hosts", "C:"):
-    # for path in search_file_in_drive("API_KEYS", "D:"):
-    #     print(path)
-    print(search_file_in_drive("API_KEYS", "D:"))
+def handle_search_file():
+    return 'search file function'

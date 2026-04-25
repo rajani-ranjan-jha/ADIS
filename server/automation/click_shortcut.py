@@ -2,6 +2,7 @@ import keyboard
 
 KeyShortcuts = {
     'settings':'windows+i',
+    'notification center':'windows+n',
     'close app':'f4',# may have issue
     'reload':'ctrl+r',
     'switch':'alt+tab',
@@ -44,13 +45,16 @@ KeyShortcuts = {
     'minimize': 'windows + down'
 }
 
-def clickShortcut(shortcut):
+# NOTE: we are not using the KeyShortcuts dictionary, use it!
+def handle_click_shortcut(shortcut):
     try:
         keyboard.press_and_release(shortcut)
+        return "done"
     except Exception as e:
-        print(e)
+        return str(e)
         
-# clickShortcut('windows+a')
-clickShortcut('volume mute')
-# clickShortcut('windows + down')
-# clickShortcut('increase brightness')
+# handle_click_shortcut('windows+a')
+# handle_click_shortcut('volume up')
+# handle_click_shortcut('windows + n')
+# handle_click_shortcut('windows + down')
+# handle_click_shortcut('increase brightness')
