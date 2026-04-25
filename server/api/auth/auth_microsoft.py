@@ -6,7 +6,7 @@ import httpx
 import base64
 
 
-from auth.auth_utils import create_jwt
+from api.auth.auth_utils import create_jwt
 from db.connect import get_connection, now
 
 router = APIRouter()

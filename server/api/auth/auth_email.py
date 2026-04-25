@@ -3,7 +3,7 @@ from models.User import UserModel
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from auth.auth_utils import create_jwt
+from api.auth.auth_utils import create_jwt
 from db.connect import hash_password, now
 
 router = APIRouter()
