@@ -1,12 +1,34 @@
 # auth_email.py
 from models.User import UserModel
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response, Request
 from pydantic import BaseModel
 
-from api.auth.auth_utils import create_jwt
+from api.auth.auth_utils import create_jwt, set_auth_cookie, verify_jwt, get_token_from_cookie
 from db.connect import hash_password, now
+from bson import ObjectId
 
 router = APIRouter()
+
+@router.get("/auth/me")
+def get_me(request: Request):
+    token = get_token_from_cookie(request)
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated, no token found")
+    
+    try:
+        payload = verify_jwt(token)
+        user_id = payload.get("sub")
+        user = UserModel.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            raise HTTPException(status_code=401, detail="User not found")
+        
+        return {
+            "email": user.get("email"),
+            "full_name": user.get("name"),
+            "profile_pic": user.get("profile_pic")
+        }
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 class EmailSignupRequest(BaseModel):
     full_name: str
@@ -18,7 +40,7 @@ class EmailLoginRequest(BaseModel):
     password: str
 
 @router.post("/auth/email/signup")
-def signup(body: EmailSignupRequest):
+def signup(body: EmailSignupRequest, response: Response):
     existingUser = UserModel.find_one({"email": body.email})
     if existingUser:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -36,10 +58,11 @@ def signup(body: EmailSignupRequest):
     user_id = str(result.inserted_id)
     
     jwt_token = create_jwt(user_id=user_id, email=body.email)
-    return {"token": jwt_token, "message": "Signup successful"}
+    set_auth_cookie(response, jwt_token)
+    return {"message": "Signup successful"}
 
 @router.post("/auth/email/login")
-def login(body: EmailLoginRequest):
+def login(body: EmailLoginRequest, response: Response):
     user = UserModel.find_one({"email": body.email})
     
     if not user:
@@ -50,4 +73,10 @@ def login(body: EmailLoginRequest):
         raise HTTPException(status_code=400, detail="Invalid email or password")
         
     jwt_token = create_jwt(user_id=str(user['_id']), email=body.email)
-    return {"token": jwt_token, "message": "Login successful"}
+    set_auth_cookie(response, jwt_token)
+    return {"message": "Login successful"}
+
+@router.post("/auth/logout")
+def logout(response: Response):
+    response.delete_cookie(key="auth_token")
+    return {"message": "Logged out"}

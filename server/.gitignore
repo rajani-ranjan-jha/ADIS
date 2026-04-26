@@ -4,6 +4,7 @@
 # virtual environment
 .venv
 .adis
+.voice
 
 # python cache
 __pycache__

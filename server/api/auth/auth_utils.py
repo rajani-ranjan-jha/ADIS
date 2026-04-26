@@ -21,3 +21,26 @@ def verify_jwt(token: str) -> dict:
         return payload
     except JWTError:
         raise ValueError("Invalid or expired token")
+
+
+def set_auth_cookie(response, token: str):
+    """Set the auth_token cookie in the response."""
+    response.set_cookie(
+        key="auth_token",
+        value=token,
+        httponly=True,
+        max_age=JWT_EXPIRE_MINUTES * 60,
+        expires=JWT_EXPIRE_MINUTES * 60,
+        samesite="lax",
+        secure=False,  # Set to True in production with HTTPS
+    )
+
+
+def delete_auth_cookie(response):
+    """Remove the auth_token cookie from the response."""
+    response.delete_cookie(key="auth_token")
+
+
+def get_token_from_cookie(request):
+    """Extract the auth_token from the request cookies."""
+    return request.cookies.get("auth_token")

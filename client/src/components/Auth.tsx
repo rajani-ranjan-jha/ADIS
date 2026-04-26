@@ -27,12 +27,12 @@ export default function Auth() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
+        credentials: "include",
       });
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.detail || "Authentication failed");
 
-      localStorage.setItem("auth_token", data.token);
       navigate("/");
     } catch (err: any) {
       setError(err.message);
@@ -48,12 +48,12 @@ export default function Auth() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token: credentialResponse.credential }),
+        credentials: "include",
       });
       const data = await res.json();
       console.log("google auth data: ", data);
       if (!res.ok) throw new Error(data.detail || "Google auth failed");
 
-      localStorage.setItem("auth_token", data.token);
       navigate("/");
     } catch (err: any) {
       setError(err.message);
@@ -72,11 +72,11 @@ export default function Auth() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ access_token: loginResponse.accessToken }),
+        credentials: "include",
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Microsoft auth failed");
 
-      localStorage.setItem("auth_token", data.token);
       navigate("/");
     } catch (err: any) {
       setError(err.message);

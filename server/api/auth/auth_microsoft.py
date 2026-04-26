@@ -1,12 +1,12 @@
 # auth_microsoft.py
 from models.User import UserModel
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Response
 from pydantic import BaseModel
 import httpx
 import base64
 
 
-from api.auth.auth_utils import create_jwt
+from api.auth.auth_utils import create_jwt, set_auth_cookie
 from db.connect import get_connection, now
 
 router = APIRouter()
@@ -18,7 +18,7 @@ class MicrosoftTokenRequest(BaseModel):
     access_token: str
 
 @router.post("/auth/microsoft/login")
-async def microsoft_login(body: MicrosoftTokenRequest):
+async def microsoft_login(body: MicrosoftTokenRequest, response: Response):
     access_token = body.access_token
 
     # ── Step B: Use the access token to fetch the user's profile ──
@@ -56,20 +56,23 @@ async def microsoft_login(body: MicrosoftTokenRequest):
 
     # DB CONNECTION
     try:
-        existingUser = UserModel.find_one({"email":email})
-        if not existingUser:
-            UserModel.insert_one({
+        user = UserModel.find_one({"email": email})
+        if not user:
+            result = UserModel.insert_one({
                 "name": full_name,
                 "email": email,
                 "profile_pic": profile_pic,
-                # "auth_provider": "microsoft",
-                # "provider_id": ms_id,
                 "created_at": now(),
                 "updated_at": now()
             })
+            user_id = str(result.inserted_id)
+        else:
+            user_id = str(user["_id"])
     except Exception as e:
         print("Error in microsoft login: ", e)
+        raise HTTPException(status_code=500, detail="Database error")
     
-    jwt_token = create_jwt(user_id=ms_id, email=email)
+    jwt_token = create_jwt(user_id=user_id, email=email)
+    set_auth_cookie(response, jwt_token)
 
-    return {"token": jwt_token, "user": {"email": email, "full_name": full_name, "profile_pic": profile_pic}}
+    return {"user": {"email": email, "full_name": full_name, "profile_pic": profile_pic}}

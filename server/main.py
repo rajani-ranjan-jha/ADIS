@@ -2,14 +2,16 @@
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from auth.auth_microsoft import router as microsoft_router
-from auth.auth_google import router as google_router
-from auth.auth_email import router as email_router
+from api.auth.auth_microsoft import router as microsoft_router
+from api.auth.auth_google import router as google_router
+from api.auth.auth_email import router as email_router
+from api.voice.main import router as voice_router
 
 app = FastAPI()
 app.include_router(microsoft_router)
 app.include_router(google_router)
 app.include_router(email_router)
+app.include_router(voice_router)
 origins = [
     "http://localhost:5173",
 ]
