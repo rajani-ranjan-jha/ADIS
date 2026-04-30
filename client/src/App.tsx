@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser, clearUser } from "./features/user/userSlice";
 import { RootState } from "./app/store";
+import { CustomToaster } from "./components/SendNotification";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="assistant" element={<AssistantSettings />} />
         </Route>
       </Routes>
+      <CustomToaster />
     </BrowserRouter>
     
   );
